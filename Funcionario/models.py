@@ -11,3 +11,5 @@ class FuncionarioTramites(models.Model):
 
     class Meta:
         verbose_name_plural="Permisos de Funcionario"
+
+
