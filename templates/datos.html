@@ -1,0 +1,123 @@
+{% extends 'profile.html' %}
+{% load static %}
+{% block contenido %}
+    <div class="card card-shadow mb-4">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-primary">
+                <div class="custom-title">Datos Básicos del Usuario</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-credit-card"></i></span>
+                    </div>
+                    <input type="text" required value="{{ request.user.username }}" name="username" readonly
+                           class="form-control"
+                           placeholder="Nombres completo" aria-label="Nombres" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
+                    </div>
+                    <input type="text" required value="{{ request.user.first_name }}" name="nombres"
+                           class="form-control"
+                           placeholder="Nombres completo" aria-label="Nombres" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
+                    </div>
+                    <input type="text" required value="{{ request.user.last_name }}" name="apellidos"
+                           class="form-control"
+                           placeholder="Apellidos Completos" aria-label="Apellidos" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-hand-point-down"></i></span>
+                    </div>
+                    <select name="provincia" required class="form-control" id="provincia">
+                        {% for provincia in provincias %}
+                            {% if persona.ciudad.provincia == provincia %}
+                                <option value="{{ provincia.id }}" selected>{{ provincia.nombre|upper }}</option>
+                            {% else %}
+                                <option value="{{ provincia.id }}">{{ provincia.nombre|upper }}</option>
+                            {% endif %}
+
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-hand-point-down"></i></span>
+                    </div>
+                    <select name="ciudad" required class="form-control" id="ciudad">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-target"></i></span>
+                    </div>
+                    <input type="text" value="{{ persona.direccion }}" required name="direccion" class="form-control"
+                           placeholder="Dirección de domicilio" aria-label="Dirección de domicilio"
+                           aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-calendar"></i></span>
+                    </div>
+                    <input type="date" required value="{{ persona.fecha_nacimiento|date:'Y-m-d' }}" name="fecha"
+                           class="form-control"
+                           placeholder="Fecha de Nacimiento" aria-label="Fecha de Nacimiento"
+                           aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-email"></i></span>
+                    </div>
+                    <input type="email" required value="{{ request.user.email }}" name="email" class="form-control"
+                           placeholder="Ingrese Email" aria-label="Ingrese Email" aria-describedby="basic-addon1">
+                </div>
+                <button type="submit" class="btn btn-red-dark">Enviar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'app/api.js' %}"></script>
+    <script src="{% static 'app/limpiarCombos.js' %}"></script>
+    <script src="{% static 'app/comboData.js' %}"></script>
+    <script src="{% static 'assets/vendor/toastr-master/toastr.js' %}"></script>
+    <script src="{% static 'app/Notificaciones.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            let provincia = document.getElementById('provincia');
+            let ciudad = document.getElementById('ciudad');
+
+            const Ciudades = ()=>{
+                let idprov=provincia.options[provincia.selectedIndex].value;
+                let apiciudad = `${endPoint}return_ciudad?id=${idprov}`;
+                limpiar(ciudad);
+                llenarCombo(apiciudad,ciudad);
+                setTimeout(function () {
+                    ciudad.value='{{ persona.ciudad_id }}';
+                },1000)
+            }
+
+            $('#provincia').change(function () {
+                Ciudades();
+            }).change();
+
+            {% if messages %}
+                {% for message in messages %}
+                    notificacion('{{ message }}','{{ message.tags }}');
+                {% endfor %}
+            {% endif %}
+
+        })
+
+    </script>
+{% endblock %}

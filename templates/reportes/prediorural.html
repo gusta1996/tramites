@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load mathfilters %}
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado de Predio Rural</title>
+    <style>
+        td {
+            border: 1px solid black;
+            padding: 1px;
+            font-size: 8px;
+            vertical-align: middle;
+        }
+        #titulo{
+            color: #0a6aa1;
+            font-weight: bold;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td rowspan="4" style="width: 120px; text-align: center"><img src="/media/Escudo_de_El_Guabo.png"style="width: 50px" alt=""></td>
+        <td style="text-align: center;" colspan="7" id="titulo">GOBIERNO AUTÓNOMO DESCENTRALIZADO MUNICIPAL DEL CANTÓN EL GUABO</td>
+    </tr>
+    <tr>
+        <td style="text-align: center;"colspan="7" id="titulo">DIRECCIÓN DE URBANISMO Y ADMINISTRACIÓN TERRITORIAL</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; background-color: lightgoldenrodyellow" colspan="5" id="titulo">CERTIFICACION DE PREDIO RURAL</td>
+        <td style="width: 60px;text-align: center; font-weight: bold" id="titulo">Código</td>
+        <td style="width: 80px; text-align: center">10002</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-weight: bold" colspan="5" id="titulo">RESPECTO UBICACIÓN DE PREDIOS EN LA ZONA RURAL</td>
+        <td style="width: 60px; text-align: center; font-weight: bold" id="titulo">Fecha</td>
+        <td style="width: 80px; text-align: center">{{ fecha|date:"d/m/Y" }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: center" colspan="6"></td>
+        <td style="width: 60px; text-align: center; font-weight: bold" id="titulo">Solicitud</td>
+        <td style="width: 80px; text-align: center">{{ registro.id|stringformat:"010d" }}</td>
+    </tr>
+
+    <tr>
+        <td colspan="8" style="text-align: center;  background-color: lightgoldenrodyellow" id="titulo">DATOS DEL PREDIO</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; width: 100px; font-weight: bold " id="titulo">ÁREA DEL PREDIO</td>
+        <td colspan="7" style="text-align: center; font-weight: bold" id="titulo">CLAVE CATASTRAL</td>
+    </tr>
+    <tr>
+        <td style="text-align: center" rowspan="2">{{ registro.area|div:10000 }} Has</td>
+        <td style="text-align: center; font-weight: bold">Código Nacional</td>
+        <td style="text-align: center; font-weight: bold">Código Local</td>
+        <td style="text-align: center; font-weight: bold">Zona</td>
+        <td style="text-align: center; font-weight: bold">Sector</td>
+        <td style="text-align: center; font-weight: bold">Polígono</td>
+        <td style="text-align: center; font-weight: bold">Solar</td>
+        <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+        <td style="text-align: center"> {{ registro.codigo_nacional }}</td>
+        <td style="text-align: center"> {{ registro.codigo_local }}</td>
+        <td style="text-align: center"> </td>
+        <td style="text-align: center"> </td>
+        <td style="text-align: center"> </td>
+        <td style="text-align: center"> </td>
+        <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">SECTOR</td>
+        <td colspan="7"> {{ registro.sector }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">PARROQUIA</td>
+        <td colspan="7"> {{ registro.parroquia }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold ">SITIO</td>
+        <td colspan="7"> {{ registro.sitio }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">CALLES</td>
+        <td colspan="7"> {{ registro.calles }}</td>
+    </tr>
+    <tr>
+        <td colspan="8" style="text-align: center;  background-color: lightgoldenrodyellow" id="titulo">DATOS DEL SOLICITANTE</td>
+    </tr>
+    <tr>
+        <td style="width: 100px; font-weight: bold">NOMBRE</td>
+        <td colspan="7"> {{ registro.usuario.get_full_name }}</td>
+    </tr>
+    <tr>
+        <td style="width: 100px; font-weight: bold">DIRECCIÓN</td>
+        <td colspan="7"> {{ registro.usuario.perfil_set.all.first.direccion }}</td>
+    </tr>
+    <tr>
+        <td style="width: 10px; font-weight: bold">NO. DE CÉDULA</td>
+        <td colspan="7"> {{ registro.usuario.username }}</td>
+    </tr>
+     <tr>
+        <td style="width: 100px; font-weight: bold">NO. DE TELÉFONO</td>
+        <td colspan="3"> {{ registro.usuario.perfil_set.all.first.telefono }}</td>
+         <td style="width: 120px; font-weight: bold">E-MAIL</td>
+        <td colspan="3"> {{ registro.usuario.email }}</td>
+    </tr>
+    <tr>
+        <td colspan="4" rowspan="2" style="height: 50px">
+            <br><br><br><br>
+        </td><td colspan="4" style="text-align: center; background-color: lightgoldenrodyellow ; font-weight: bold" id="titulo">CERTIFICACIÓN RURAL</td>
+    </tr>
+    <tr>
+       <td style="font-weight: bold" colspan="2">COORDENADAS</td><td style="text-align: center" colspan="2"> UTM/WGS-84</td>
+    </tr>
+    <tr>
+        <td colspan="4" style="text-align: center; font-weight: bold" id="titulo">FIRMA DEL SOLICITANTE</td>
+        <td style="font-weight: bold" colspan="2">ÁREA DEL TERRENO</td><td style="text-align: center" colspan="2"> {{ registro.area }} M <sup>2</sup></td>
+    </tr>
+    <tr>
+        <td colspan="4" style="text-align: center; font-weight: bold">
+            GRÁFICO DIGITALIZADO <br>
+            <img src="/media/{{registro.grafico}}" alt="">
+        </td>
+        <td colspan="4">
+            <img src="/media/{{registro.puntos}}" alt="">
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 8px; font-weight: bold;" colspan="8">
+            <span style="color: darkred">NOTA:</span>
+            <i>LA PRESENTE CERTIFICACION SE REFIERE EXCLUSIVAMENTE A LA EXISTENCIA DE UN DETERMINADO PREDIO EN EL SECTOR RURAL SIN INDICACION DE PROPIETARIO ALGUNO NI RETIROS DEBIDOS DE AFECTACIONES DE VÍAS</i>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: center;  background-color: lightgoldenrodyellow" colspan="8" id="titulo">LÍNDEROS</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">NORTE</td>
+        <td colspan="7"> {{ registro.norte }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">SUR</td>
+        <td colspan="7"> {{ registro.sur }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">ESTE</td>
+        <td colspan="7"> {{ registro.este }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">OESTE</td>
+        <td colspan="7"> {{ registro.oeste }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold"  id="">OBSERVACIONES</td>
+        <td colspan="7" style="font-size: 12px">{{ registro.datos_observaciones|safe }}</td>
+    </tr>
+    <tr>
+        <td colspan="8" style="text-align: center">
+            <br><br><br>
+            ING. MSc. SEBASTIÁN CHÁVEZ BARRIGA <br>
+            <strong>DIRECTOR DE URBANISMO Y ADMINISTRACIÓN TERRITORIAL</strong>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: center; background-color: lightgoldenrodyellow" colspan="8" id="titulo">DATOS DEL COMPROBANTE DE PAGO</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">NO. DE COMPROBANTE</td><td colspan="3"> {{ registro.n_comprobante }}</td>
+        <td style="font-weight: bold">FECHA DE RETIRO</td><td colspan="3"> {{ registro.f_retiro }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">FECHA DE PAGO</td><td colspan="3"> {{ registro.fecha_pago }}</td>
+        <td style="font-weight: bold">NOMBRE PERSONA QUE RETIERA</td><td colspan="3"> {{ registro.nombre_retira }}</td>
+    </tr>
+    <tr>
+        <td style="font-weight: bold">NO. DE CERTIFICADO</td><td colspan="3"> {{ registro.n_certificado }}</td>
+        <td colspan="4" style="text-align: center; font-weight: bold">FIRMA</td>
+    </tr>
+    <tr>
+        <td colspan="4" style="border-left: none; border-bottom: none"> </td><td colspan="4"><br><br></td>
+    </tr>
+</table>
+<script>
+
+</script>
+</body>
+</html>

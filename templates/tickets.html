@@ -1,0 +1,107 @@
+{% extends 'profile.html' %}
+{% load static %}
+{% block contenido %}
+    <div class="card-header border-0">
+        <div class="custom-title-wrap bar-primary">
+            <div class="custom-title">Mis Tickets</div>
+        </div>
+    </div>
+    <div class="pt-3 pb-4">
+        <div class="table-responsive">
+            <table id="t-tikets" class="display table table-bordered table-striped" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Usado</th>
+                    <th>Eliminar</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for registro in registros %}
+                    <tr>
+                        <td>{{ registro.id }}</td>
+                        <td>{{ registro.tiket }}</td>
+                        <td>{% if registro.estado %}Completo{% else %}En Proceso{% endif %}</td>
+                        <td>{% if registro.es_usado %}Si{% else %}No{% endif %}</td>
+                        <td style="text-align: center">
+                            <a href="/remove_tikets?id={{ registro.id }}"
+                               title="Eliminar trámite"
+                               class="btn btn-outline-danger">
+                                <i style="font-size: medium" class="ti-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block contenido1 %}
+    <div class="card card-shadow mb-4">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-danger">
+                <div class="custom-title">Registro de Tickets</div>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="input-group mb-4" style="padding-top: 20px">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-hand-point-down"></i></span>
+                    </div>
+                    <select name="tipo" required="" disabled class="form-control" id="tipo">
+
+                    </select>
+                    <input name="clase" id="clase" hidden>
+                </div>
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="ti-hand-point-down"></i></span>
+                    </div>
+                    <select name="t" required="" class="form-control" id="t">
+
+                    </select>
+                </div>
+                <div class="input-group mb-4">
+                    <button class="btn btn-red-dark" style="width: 100%"><i class="ti-save"></i> Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block styles %}
+    <link href="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+{% block script %}
+    <script src="{% static 'app/api.js' %}"></script>
+    <script src="{% static 'app/limpiarCombos.js' %}"></script>
+    <script src="{% static 'app/comboData.js' %}"></script>
+    <script src="{% static 'assets/vendor/toastr-master/toastr.js' %}"></script>
+    <script src="{% static 'app/Notificaciones.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            let ticket = document.getElementById('t');
+            let api = `${endPoint}return_tikets`;
+            llenarCombo(api, ticket)
+
+            let apitipo = `${endPoint}return_tramites`;
+            let tipo = document.getElementById('tipo');
+
+            llenarCombo(apitipo, tipo)
+
+            setTimeout(function () {
+                $("#tipo option:contains(TICKETS)").attr('selected', true);
+                tipo.setAttribute("readonly", "readonly");
+                $("#clase").val(tipo.value)
+            }, 2000)
+
+        })
+
+        $('#t-tikets').DataTable()
+    </script>
+
+{% endblock %}

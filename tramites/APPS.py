@@ -1,0 +1,10 @@
+APPLICATIONS=[
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'django_filters',
+    'mathfilters',
+    'django_summernote',
+    'Usuario',
+    'Registro',
+    'Funcionario',
+]

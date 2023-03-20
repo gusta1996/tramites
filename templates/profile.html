@@ -1,0 +1,817 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+
+    <!--favicon icon-->
+    <link rel="icon" type="image/png" href="{% static 'assets/img/logo.png' %}">
+
+    <title>Profile</title>
+
+    <!--web fonts-->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+
+    <!--bootstrap styles-->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!--icon font-->
+    <link href="{% static 'assets/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/dashlab-icon/dashlab-icon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/themify-icons/css/themify-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/weather-icons/css/weather-icons.min.css' %}" rel="stylesheet">
+
+    <!--jquery ui-->
+    <link href="{% static 'assets/vendor/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+
+    <!--iCheck-->
+    <link href="{% static 'assets/vendor/icheck/skins/all.css' %}" rel="stylesheet">
+
+    <link href="{% static 'assets/vendor/toastr-master/toastr.css' %}" rel="stylesheet">
+    <!--custom styles-->
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/custom.css' %}" rel="stylesheet">
+    {% block styles %}
+
+    {% endblock %}
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'assets/vendor/html5shiv.js' %}"></script>
+    <script src="{% static 'assets/vendor/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+
+<body class="left-sidebar-fixed">
+<!--header start-->
+<header class="app-header">
+    <div class="branding-wrap">
+        <!--left nav toggler start-->
+        <a class="nav-link mt-2 float-left js_left-nav-toggler pos-fixed" href="javaScript:;">
+            <i class=" ti-align-right"></i>
+        </a>
+        <!--left nav toggler end-->
+
+        <!--brand start-->
+        <div class="navbar-brand pos-fixed">
+            <a class="" href="index.html">
+                <img src="{% static 'assets/img/logo.png' %}" srcset="{% static 'assets/img/logo.png' %} 2x"
+                     alt="CodeLab">
+            </a>
+        </div>
+        <!--brand end-->
+    </div>
+</header>
+<!--search modal start-->
+<div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="text" class="form-control" placeholder="Search...">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--search modal start-->
+<!--header end-->
+
+<div class="app-body">
+    <!--left sidebar start-->
+    <div class="left-nav-wrap">
+        <div class="left-sidebar">
+            <nav class="sidebar-menu">
+                <ul id="nav-accordion">
+                    <li class="sub-menu">
+                        <a href="/">
+                            <i class=" ti-home"></i>
+                            <span>Perfil</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="/logouts">
+                            <i class=" ti-close"></i>
+                            <span>Salir</span>
+                        </a>
+                    </li>
+                    <li class="nav-title">
+                        <h5 class="text-uppercase">Trámites</h5>
+                    </li>
+                    {% comment %}<li class="sub-menu">
+                        <a href="{% url 'tickets' %}">
+                            <i class="ti-tag"></i>
+                            <span>Solicitud de Tikets</span>
+                        </a>
+                    </li>{% endcomment %}
+
+                    <li class="sub-menu">
+                        <a>
+                            <i class="ti-clipboard"></i>
+                            <span>Urbanismo</span>
+                        </a>
+                        <ul style="max-height: 300px; " class="overflow-auto">
+                            <li class="sub-menu">
+                                <a href="{% url 'linea_fabrica' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Cert. Línea de Fabrica</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'certificado_predio_rural' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Cert. de Predio Rural</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'compra_y_venta' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Compra y Venta</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'contrato_arr_cementerio' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Contrato Arr. Cementerio</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'division_bien_inmueble' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Division de Bien Inmueble</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'fraccionamiento_agricola_unificacion_predio' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Frac. Agrícola, Uni. Predios</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'particion_extrajudicial_y_adjudicación' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Part. Extrajud. y Adj.</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'cerramiento' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>P. de Cerramiento</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'construccion_cementerio' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>P. de C. Cementerio</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'permiso_construccion_mayor' %}">
+                                    <i class="fa fa-industry"></i>
+                                    <span>P. de Construcción Mayor</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'permiso_construccion_menor' %}">
+                                    <i class="fa fa-industry"></i>
+                                    <span>P. de Construcción Menor</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'rect_linderos_medidas_areas' %}">
+                                    <i class="fa fa-industry"></i>
+                                    <span>R. de Linderos, M. y Á.</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'registro_letrero' %}">
+                                    <i class="ti-clipboard"></i>
+                                    <span>Registro de Letrero</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'registro_municipal' %}">
+                                    <i class="ti-clipboard"></i>
+                                    <span>Registro Municipal</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a>
+                            <i class="ti-clipboard"></i>
+                            <span>Comisaría Municipal</span>
+                        </a>
+                        <ul style="max-height: 300px; " class="overflow-auto">
+                            <li class="sub-menu">
+                                <a href="{% url 'derechos_sepultura' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Derechos De Sepultura</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'exhumacion_cadaveres' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Exhumación De Cadáveres</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'patente_municipal' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Patente Municipal</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'uso_de_suelo' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Permiso De Uso De Suelo</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'rev_patente_municipal' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Rev. Patente Municipal</span>
+                                </a>
+                            </li>
+                            <li class="sub-menu">
+                                <a href="{% url 'permiso_via_publica' %}">
+                                    <i class="fa fa-institution"></i>
+                                    <span>Sol. Permiso de Vía Pública</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--left sidebar end-->
+
+    <!--main content wrapper-->
+    <div class="content-wrapper">
+
+        <!--profile nav-->
+        <div class="profile-nav mb-4">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="profile-nav-links">
+                                    <ul class="nav f12">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#">BIENVENIDO PANEL DEL USUARIO</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/profile nav-->
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-4 col-md-6 profile-info-position">
+                    <div class="card card-shadow mb-4 ">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <div class="mt-4 mb-3">
+                                    <img class="rounded-circle" src="{% if perfil.foto %}/media/{{ perfil.foto }}{% else %}{% static 'assets/img/avatar/usuario.png' %}{% endif %}"
+                                         width="85" alt=""/>
+                                </div>
+                                <h5 class="text-uppercase mb-0">{{ request.user.get_full_name }}</h5>
+                                <p class="text-muted mb-0">{% if request.user.is_active %} {{ request.user }} {% else %}
+                                    Inactivo{% endif %}</p>
+                                <div class="profile-social-link mb-4">
+                                    <a data-toggle="modal" data-target="#icedula" href="#" class="mx-2"><i
+                                            class="fa fa-address-card-o"></i></a>
+                                    <a data-toggle="modal" data-target="#ifoto" href="#" class="mx-2"><i
+                                            class="fa fa-camera"></i></a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    {% block contenido1 %}
+
+                    {% endblock %}
+                </div>
+
+
+                <div class="col-xl-8 col-md-6">
+                    <div class="card">
+
+                        <div class="card-body">
+                            {% block contenido %}
+                                <div class="card card-shadow mb-4">
+
+                                    <div class="card-header border-0">
+                                        <div class="custom-title-wrap bar-success">
+                                            <div class="custom-title">PANEL DE REGISTRO</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link show active" data-toggle="tab" href="#tab-j_1"> <i
+                                                        class="fa fa-user pr-2"></i> Datos del Usuario</a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link show" data-toggle="tab" href="#tab-j_2"><i
+                                                        class="fa fa-shield pr-2"></i> Seguridad</a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane show active" id="tab-j_1" role="tabpanel">
+                                                <div class="card card-shadow mb-4">
+                                                    <div class="card-body">
+                                                        <form action="/?update" method="post">
+                                                            {% csrf_token %}
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-address-card"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Username" name="username"
+                                                                       id="username"
+                                                                       value="{{ request.user.username }}"
+                                                                       aria-label="Username"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-user"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Nombres" name="nombres" id="nombres"
+                                                                       value="{{ request.user.first_name }}"
+                                                                       aria-label="Nombres"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-user"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Apellidos" name="apellidos"
+                                                                       id="apellidos"
+                                                                       value="{{ request.user.last_name }}"
+                                                                       aria-label="Apellidos"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-calendar"></i></span>
+                                                                </div>
+                                                                <input type="date" class="form-control"
+                                                                       placeholder="Fecha de Nacimiento" name="fecha"
+                                                                       id="fecha"
+                                                                       value="{{ perfil.fecha_nacimiento|date:"Y-m-d" }}"
+                                                                       aria-label="Apellidos"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                        <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-building"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Empresa donde Trabaja" name="empresa"
+                                                                       id="empresa"
+                                                                       value="{{ perfil.empresa }}"
+                                                                       aria-label="Empresa"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-crosshairs"></i></span>
+                                                                </div>
+                                                                <select name="provincia" class="form-control"
+                                                                        id="provincia">
+                                                                    {% for provincia in provincias %}
+                                                                        {% if perfil.ciudad.provincia_id == provincia.id %}
+                                                                            <option selected
+                                                                                    value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                                                                        {% endif %}
+                                                                        <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-crosshairs"></i></span>
+                                                                </div>
+                                                                <select name="ciudad" class="form-control"
+                                                                        id="ciudad">
+                                                                </select>
+
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-crosshairs"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Dirección" name="direccion"
+                                                                       id="direccion"
+                                                                       value="{{ perfil.direccion }}"
+                                                                       aria-label="Dirección"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-phone"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teléfono" name="telefono"
+                                                                       id="telefono"
+                                                                       value="{{ perfil.telefono }}"
+                                                                       aria-label="Teléfono"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3">
+                                                                <div class="input-group-prepend">
+                                                                <span class="input-group-text"
+                                                                      id="basic-addon1"><i
+                                                                        class="fa fa-envelope"></i></span>
+                                                                </div>
+                                                                <input type="email" class="form-control"
+                                                                       placeholder="Email" name="email"
+                                                                       id="email"
+                                                                       value="{{ user.email }}"
+                                                                       aria-label="Email"
+                                                                       aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <div class="input-group mb-3" style="text-align: center">
+                                                                <button class="btn btn-primary"><i
+                                                                        class="fa fa-save"></i> Registrar
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="tab-pane show" id="tab-j_2" role="tabpanel">
+                                                Include Bootstrap's source Sass and JavaScript files via npm, Composer
+                                                or Meteor. Package managed installs don't include documentation, but do
+                                                include our build system and readme.
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endblock %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--footer-->
+        <footer class="sticky-footer">
+            <div class="container">
+                <div class="text-center">
+                    <small>Copyright &copy; VectorLab 2018</small>
+                </div>
+            </div>
+        </footer>
+        <!--/footer-->
+    </div>
+    <!--/main content wrapper-->
+
+    <!--right sidebar-->
+    <div class="right-sidebar" id="right_side_bar">
+        <div class="card border-0">
+            <div class="card-body pb-0">
+                <!--close toggle-->
+                <a href="javascript:;" class="right_side_toggle float-right close-sidebar-icon">
+                    <i class=" ti-shift-right"> </i>
+                </a>
+                <!--/close toggle-->
+            </div>
+            <div class="card-body pt-2">
+
+                <div class="right-widget">
+                    <div class="custom-title-wrap bar-primary mb-4">
+                        <div class="custom-title">Today's Activity</div>
+                    </div>
+
+                    <ul class="list-unstyled base-timeline">
+                        <li class="time-dot-primary">
+                            <div class="base-timeline-info">
+                                <a href="#">John123</a> Successfully purchased item#26
+                            </div>
+                            <small class="text-muted">
+                                28 mins ago
+                            </small>
+                        </li>
+                        <li class="time-dot-danger">
+                            <div class="base-timeline-info">
+                                <a href="#" class="text-danger">Farnandez</a> placed the order for accessories
+                            </div>
+                            <small class="text-muted">
+                                2 days ago
+                            </small>
+                        </li>
+                        <li class="time-dot-purple">
+                            <div class="base-timeline-info">
+                                User <a href="#" class="text-purple">Lisa Maria</a> checked out from the market
+                            </div>
+                            <small class="text-muted">
+                                12 mins ago
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="right-widget">
+                    <div class="custom-title-wrap bar-danger mb-4">
+                        <div class="custom-title">Active Users</div>
+                    </div>
+
+                    <ul class="list-unstyled mb-0 list-widget">
+                        <li class="cursor">
+                            <div class="media mb-4">
+                                <div class="st-alphabet mr-3">
+                                    <img class="rounded-circle" src="{% static 'assets/img/avatar/avatar1.jpg' %}"
+                                         alt=" ">
+                                    <span class="status bg-success"></span>
+                                </div>
+                                <div class="media-body ">
+                                    <div class="float-left">
+                                        <h6 class="text-uppercase mb-0">shirley hoe</h6>
+                                        <span class="text-muted">Online</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="cursor">
+                            <div class="media mb-4">
+                                <div class="st-alphabet mr-3">
+                                    <img class="rounded-circle" src="{% static 'assets/img/avatar/avatar2.jpg' %}"
+                                         alt=" ">
+                                    <span class="status bg-warning"></span>
+                                </div>
+                                <div class="media-body ">
+                                    <div class="float-left">
+                                        <h6 class="text-uppercase mb-0">james alexender</h6>
+                                        <span class="text-muted">Screaming...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="cursor">
+                            <div class="media mb-4">
+                                <div class="st-alphabet mr-3">
+                                    <img class="rounded-circle" src="{% static 'assets/img/avatar/avatar3.jpg' %}"
+                                         alt=" ">
+                                    <span class="status bg-info"></span>
+                                </div>
+                                <div class="media-body">
+                                    <div class="float-left">
+                                        <h6 class="text-uppercase mb-0">ursula sitorus</h6>
+                                        <span class="text-muted">Start Exploring</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="cursor">
+                            <div class="media mb-3">
+                                <div class="st-alphabet mr-3">
+                                    <img class="rounded-circle" src="{% static 'assets/img/avatar/avatar4.jpg' %}"
+                                         alt=" ">
+                                    <span class="status bg-danger"></span>
+                                </div>
+                                <div class="media-body">
+                                    <div class="float-left">
+                                        <h6 class="text-uppercase mb-0">jonna pinedda</h6>
+                                        <span class="text-muted">Busy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="right-widget">
+
+                    <div class="custom-title-wrap bar-success mb-4">
+                        <div class="custom-title">Notification</div>
+                    </div>
+
+                    <div>
+                        <a class="nav-link border-bottom px-0 py-3" href="#">
+                                <span class="text-primary">
+                                <span class="weight700 f12">
+                                    <i class="vl_bell weight600 pr-2"></i>Weekly Update</span>
+                                </span>
+                            <span class="small float-right text-muted">03:14 AM</span>
+
+                            <div class="text-dark f12">
+                                This week project update report generated. All team members are requested to check the
+                                updates
+                            </div>
+                        </a>
+
+                        <a class="nav-link border-bottom px-0 py-3" href="#">
+                                <span class="text-danger">
+                                <span class="weight700 f12">
+                                    <i class="vl_Download-circle weight600 pr-2"></i>Server Error</span>
+                                </span>
+                            <span class="small float-right text-muted">10:34 AM</span>
+
+                            <div class="text-dark f12">
+                                Unexpectedly server response stop. Responsible members are requested to fix it soon
+                            </div>
+                        </a>
+
+                        <a class="nav-link border-bottom px-0 py-3" href="#">
+                                <span class="text-success">
+                                <span class="weight700 f12">
+                                    <i class="vl_screen weight600 pr-2"></i>Monthly Meeting</span>
+                                </span>
+                            <span class="small float-right text-muted">12:30 AM</span>
+
+                            <div class="text-dark f12">
+                                Our monthly meeting will be held on tomorrow sharp 12:30. All members are requested to
+                                attend this meeting.
+                            </div>
+                        </a>
+
+                        <div class="text-center mt-3">
+                            <a class="nav-link px-0" href="#">View all notification</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--/modal-->
+
+    <div class="modal fade" id="ifoto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="/?avatar" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Foto de Perfil</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Por favor subir una foto actualizada, es probable que esta foto se utilize para trámites
+                            futuros, la foto debe ser con fondo blanco y de tamaño carnet. Formato admitido jpg, jpeg o png. Tamaño máximo 1MB
+                        </p>
+                        <div style="text-align: center">
+                            <span>Imagen Actual</span><br>
+                            <img class="img-thumbnail" style="width: 100px" src="/media/{{ perfil.foto }}" alt="">
+                        </div>
+                        <br>
+                        <input type="file" required="required" name="avatar" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Registrar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="icedula" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="/?cedula" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Cedula de Identidad</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Documento de identidad debe ser enviada de ambos lados, cada vez que se realiza un trámite sera sometida a comprobación
+                            para verificar que no se encuentre caducada o el que el archivo adjunto sea el correcto.
+                            Formato admitido pdf, jpeg, jpg o png tamaño máximo 1MB
+                        </p>
+                        <div style="text-align: center">
+                            <span>Documento actual:</span><br>
+                            <a target="_blank" href="/media/{{ perfil.cedula }}"><i class="fa fa-street-view"></i> Ver Documento</a>
+                        </div>
+                        <br>
+                        <input type="file" required="required" name="cedula" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">cERRAR</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Registrar Cambios</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--basic scripts-->
+<script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+{#    <script src="{% static 'assets/vendor/popper.min.js' %}"></script>#}
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery.dcjqaccordion.2.7.js' %}"></script>
+<script src="{% static 'assets/vendor/icheck/skins/icheck.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery.nicescroll.min.js' %}"></script>
+<!--[if lt IE 9]>
+    <script src="{% static 'assets/vendor/modernizr.js' %}"></script>
+    <![endif]-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% block script %}
+
+{% endblock %}
+
+<!--basic scripts initialization-->
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+<script src="{% static 'app/comboData.js' %}"></script>
+<script src="{% static 'app/api.js' %}"></script>
+<script src="{% static 'assets/vendor/toastr-master/toastr.js' %}"></script>
+<script src="{% static 'app/Notificaciones.js' %}"></script>
+<script src="{% static 'app/limpiarCombos.js' %}"></script>
+<script>
+    $("#provincia").change(function () {
+        let id = $(this).val()
+        let api = `${endPoint}return_ciudad?id=${id}`
+        let provincia = document.getElementById('provincia')
+        let ciudad = document.getElementById('ciudad')
+        limpiar(ciudad)
+        llenarCombo(api, ciudad)
+        selectElement('ciudad', '{{ perfil.ciudad_id }}')
+    }).change()
+
+
+    {% if messages %}
+        {% for message in messages %}
+            notificacion('{{ message }}', '{{ message.tags }}')
+        {% endfor %}
+    {% endif %}
+
+    $('input[type="file"]').on('change', function () {
+        var ext = $(this).val().split('.').pop();
+        if ($(this).val() != '') {
+            if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "pdf") {
+                if ($(this)[0].files[0].size > 1048576) {
+                    console.log("El documento excede el tamaño máximo");
+                    notificacion('Error al cargar el archivo, es posible que el archivo sea muy pesado máximo 1 Mb', 'error')
+                    $(this).val('');
+                }
+            } else {
+                $(this).val('');
+                notificacion('Solo se admiten archivos en formato jpej, jpg o png, pdf', 'error')
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
+

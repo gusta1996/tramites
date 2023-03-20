@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load mathfilters %}
+<head>
+    <meta charset="UTF-8">
+    <title>Permiso de COnstrucción en Cementerio</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0mm 0mm 0mm 0mm;
+            background: url("/media/fondo.png");
+        }
+    </style>
+</head>
+<body>
+<img src="/media/cabecera.png" alt="">
+<h1 style="text-align: center;">GOBIERNO AUTONÓMO DESCENTRALIZADO MUNICIPAL DEL CANTÓN EL GUABO</h1>
+<h1 style="text-align: center;">DIRECCIÓN DE  URBANISMO Y ADMINISTRACIÓN TERRITORIAL</h1>
+<div style="padding-left: 1.5cm; padding-right: 1.5cm">
+    <p style="text-align: right">El Guabo, {{ registro.fecha }}</p>
+    <br><br>
+    <table style="margin-left: -55px; font-size: 12px">
+    <tr>
+        <td style="width: 60px; padding-top: 10px"><strong>DE:</strong></td>
+        <td style="padding-top: 10px">ING. SEBASTIÁN CHÁVEZ</td>
+    </tr>
+        <tr>
+            <td style="padding-top: 6px"><strong>PARA:</strong></td>
+            <td style="padding-top: 6px">{{ registro.usuario.get_full_name }}</td>
+        </tr>
+        <tr>
+            <td style="padding-top: 6px"><strong>ASUNTO:</strong></td>
+            <td style="padding-top: 6px">PERMISO DE CONSTRUCCIÓN EN CEMENTERIO</td>
+        </tr>
+</table>
+    <br><br>
+    <p style="line-height: 20px; font-size: 13px; text-align: justify">
+        {{ registro.datos_observaciones|safe }}
+    </p>
+    <br><br><br>
+    <p style="font-size: 13px">
+        Atentamente,
+        <br><br><br><br>
+        Ing. Msc. Sebastián Chávez Barriga <br>
+        <strong>DIRECTOR DE URBANISMO </strong>
+    </p>
+    <p>ELABORADO POR: {{ funcionario }}</p>
+</div>
+
+
+</body>
+</html>

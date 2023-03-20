@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin: 0cm 1cm 1cm 1cm;
+            background-image: url("/media/fondo.png");
+            background-repeat: no-repeat;
+            font-size: 9px;
+        }
+        div{
+            font-size: 8px;
+            padding: 0;
+        }
+        #si {
+            width: 50px;
+            text-align: center;
+            background-color: lightgrey;
+            font-weight: bold;
+        }
+
+        .table-bordered {
+            border: 1px solid lightgrey;
+        }
+
+        #firmas {
+            width: 50%;
+        }
+
+        #titulo {
+            background-color: lightgrey;
+            padding-top: 2px;
+            text-align: center;
+        }
+
+        #parr {
+            padding-top: 2px;
+            text-align: center;
+        }
+
+        td, tr {
+            padding: 2px;
+            padding-bottom: 0;
+
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Certificado de linea de fábrica</title>
+</head>
+<body>
+<img src="/media/cabecera.png" alt="">
+    {{ registro.datos_observaciones|safe }}
+</body>
+</html>

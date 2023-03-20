@@ -1,0 +1,754 @@
+{% extends 'funcionario/profile.html' %}
+{% load static %}
+{% block main %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-primary" role="alert">
+                    <table class="table">
+                        <tr>
+                            <td><strong>Trámite</strong></td>
+                            <td>{{ documento.tramite.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cédula</strong></td>
+                            <td>{{ documento.usuario.username }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nombre Completo</strong></td>
+                            <td>{{ documento.usuario.get_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No. de Teléfono</strong></td>
+                            <td>{{ documento.usuario.perfil_set.first.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dirección</strong></td>
+                            <td>{{ documento.usuario.perfil_set.first.direccion }}
+                                - {{ documento.usuario.perfil_set.first.ciudad.nombre }}
+                                - {{ documento.usuario.perfil_set.first.ciudad.provincia.nombre }}</td>
+                        </tr>
+                        {% if documento.tramite.nombre == 'Contrato de Arrendamiento de Cementerio' %}
+                            <tr>
+                                <td><strong>Oficio de Petición</strong></td>
+                                <td><a target="_blank" href="/contrato_arr_cementerio?solicitud={{ documento.id }}">Ver
+                                    documento</a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if documento.tramite.nombre == 'Certificado de Predio Rural' %}
+                            <tr>
+                                <td>
+                                    <button class="btn btn-success" id="predio" data-toggle="modal"
+                                            data-target="#predios">Detalles del Predio
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning" id="predio" data-toggle="modal"
+                                            data-target="#imagenes">Cargar Imagenes
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" id="pp" data-toggle="modal"
+                                            data-target="#d_pago">Detalles del Pago
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if documento.tramite.nombre == 'Permiso de Construcción Menor' %}
+                            <td colspan="2">
+                                <button id="obs" class="btn btn-danger" data-toggle="modal" data-target="#observaciones">Datos y Observaciones del Predio</button>
+                            </td>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if documento.disenio %}
+        <div class="col-md-12 py-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-primary" role="alert">
+                        <table class="table">
+                            <tr>
+                                <td><strong>Nombre del Establecimiento</strong></td>
+                                <td>{{ documento.nombre_negocio }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dirección del Local</strong></td>
+                                <td>{{ documento.direccion_local }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dimensión del Letrero</strong></td>
+                                <td>{{ documento.x }}cm. de Ancho por {{ documento.y }}cm. de largo</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Oficio de Petición</strong></td>
+                                <td><a target="_blank" href="/registro_letrero?solicitud={{ documento.id }}">Ver
+                                    documento</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="col-md-12 py-4">
+        <div class="card">
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ documento.id }}">
+                            <p>Contenido del Certificado:</p>
+                            <textarea id="notas2" class="notas form-control" name="notas2">
+                                {% if documento.datos_observaciones %}
+                                {{ documento.datos_observaciones }}
+                                {% else %}
+                                {% if documento.tramite.nombre == 'Permiso de Construcción en el Cementerio'%}
+                                <p>
+                                    La dirección de Urbanismo y Administración Territorial,
+                                    le concede el respectivo PERMISO para la construcción de
+                                    _____________________ en el interior del  Cementerio General de esta ciudad ubicado,
+                                    Zona (___), Sector (___) Manzana (___) Solar: Fase __,
+                                    para lo cual deberá regirse a la línea de fábrica aprobada por este departamento,
+                                    si no cumple con esta disposición será sancionado de acuerdo a las Ordenanza Municipales vigentes;
+                                    el área de construcción es de ____ M2 (__ NIVELES).
+                                </p>
+                                {% endif %}
+                                {% if documento.tramite.nombre == 'Certificado de Línea de Fábrica'%}
+                                    <p>
+Yo, <strong>{{  documento.usuario.get_full_name|upper }}</strong> solicito se me confiera
+el certificado de línea de fábrica para: Vender( ), edificar ( ), para afectación ( ),
+para otros fines ( ), correspondiente a mi propiedad Ubicada en ___________________________________________________________________________________________________________________________________</p><table class="table table-bordered"><tbody><tr><td>Frente: ____________________</td><td>Superficie del terreno: _____________<br></td><td>LOTIZACION: "________________________________________________"<br></td></tr><tr><td>Zona No. ___<br></td><td>Sector No. ___<br></td><td>Manzana No. ____&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Solar No.: __________</td></tr></tbody></table><p><b>DATOS DE LAS VÁS:</b></p><table class="table table-bordered"><tbody><tr id="titulo"><td><b>NOMBRE DE LA CALLE O AVENIDA</b></td><td><b>ANCHO EN METROS</b></td><td><b>REFERENCIA LÍNEA DE FÁBRICA</b></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table><p><b>RETIROS:</b></p><table class="table table-bordered"><tbody><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table><p><br></p><table class="table table-bordered"><tbody><tr><td><br></td><td id="si">SI</td><td id="si">NO</td><td><br></td><td id="si">SI</td><td id="si">NO</td><td><br></td><td id="si">SI</td><td id="si">NO</td></tr><tr><td><b>AGUA POTABLE</b></td><td><br></td><td><br></td><td><b>ALCANTARILLADO</b></td><td><br></td><td><br></td><td><b>ENERGIA ELECTRICA</b></td><td><br></td><td><br></td></tr><tr><td><b>TELÉFONO</b></td><td><br></td><td><br></td><td><b>CALZADA</b></td><td><br></td><td><br></td><td><b>BORDILLOS</b></td><td><br></td><td><br></td></tr><tr><td><b>ACERAS</b></td><td><br></td><td><br></td><td><br></td><td><br></td><td><br></td><td><br></td><td><br></td><td><br></td></tr></tbody></table><p><b>NORMAS TÉCNICAS:</b></p><table class="table table-bordered"><tbody><tr><td><p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">EL Cerramiento frontal se construirá: En la línea&nbsp; de Fabrica Indicada.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Voladizo en Mezanine. - No se contempla<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Voladizo en losa de H* A* de Entrepiso de primera planta alta: 2,00 ML.
+A partir de la línea de Fabrica.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Voladizo en cubierta metálica de último piso. 2,50 ML. A Partir de la línea
+de Fabrica.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">LINEA DE SOPORTAL. - No se Contempla.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Nivel Inferior de losa en Mezanine. - No se contempla<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Nivel Inferior de losa de H* A* en 1ra planta alta. -3,22ML A PARTIR DE
+NIVEL DE BORDILLO. <o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Nivel de Acera: A partir del nivel de bordillo&nbsp;&nbsp; y con pendiente positiva del 2% hasta la línea
+de fábrica<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Proyecto de cuatro pisos o más debe incluir; escalera de emergencia<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Proyecto con más de 250 m2. de construcción debe incluir el diseño eléctrico
+(planos y memoria técnica)<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Proyecto de cuatro losas de Ho Ao,&nbsp;
+o más debe presentar estudio de suelo.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Retiro posterior y lateral mínimo 3.00 m a partir de la línea de lindero
+lateral y posterior del solar<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Adosamientos admisibles. - posterior y laterales.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Todo proyecto debe contar con el diseño de instalaciones especiales
+contra incendio<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Los volados deberán estar alejados al menos 1,0m de la línea de postes
+de energía eléctrica<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">El diseño estructural debe contar con memoria técnica a partir de
+proyectos de dos o más losas de Ho Ao.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Para cubiertas con estructura metálica se debe diseñar viga de amarre
+superiores y perimetrales <o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">La ejecución del proyecto debe contar con un profesional responsable técnico
+de Obra (Ingeniero civil o Arquitecto)<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Debe colocar en el sitio de la obra un letrero (formato 90x60) con la información
+requerida en la hoja adjunta al permiso de construcción.<o:p></o:p></p>
+
+<p class="MsoNormal" style="margin-bottom:0cm;line-height:normal">Presentar adjunto a los planos del proyecto la Memoria Descriptiva del
+mismo.</p></td></tr></tbody></table>
+<br>
+<p></p>
+                            <p></p><table class="table table-bordered"><tbody><tr><td style="text-align: center; width: 616.1px;"><p><br></p><p><br></p><p>Firma del Propietario</p></td><td style="text-align: center;"><p><br></p><p><br></p><p>Ing. Sebastian Chávez</p><p><b style="background-color: transparent;">DIRECTOR DE URBANISMO Y CONTROL TERRITORIAL</b></p></td></tr></tbody></table>
+                                {% endif %}
+                                {% endif %}
+                            </textarea>
+                            <br>
+                            <p>Errores de la válidación u Observaciones</p>
+                            <textarea name="notas" id="notas" cols="30" rows="10" class="form-control notas">
+                                {{ documento.notas|safe }}
+                            </textarea>
+                            <br>
+                            <span>Cédula Inconsistente: </span>
+                            <input type="checkbox" name="cedula">
+                            <span>| Certificado de Votación Inconsistente: </span>
+                            <input type="checkbox" name="votacion">
+                            <span>| Certificado de No adeudar al Municipio Inconsistente: </span>
+                            <input type="checkbox" name="no_adeudar">
+                            <span>| Certificado de No adeudar a EPAAGUA Inconsistente: </span>
+                            <input type="checkbox" name="no_adeudar_e">
+                            <span>| Certificado de Senescyt Inconsistente: </span>
+                            <input type="checkbox" name="senescyt">
+                            <span>| Título Inconsistente: </span>
+                            <input type="checkbox" name="titulo">
+                            <span>| R.U.C. Inconsistente: </span>
+                            <input type="checkbox" name="ruc">
+                            <span>| Diseño Inconsistente: </span>
+                            <input type="checkbox" name="disenio">
+                            <span>| Escritura Inconsistente: </span>
+                            <input type="checkbox" name="escritura">
+                            <span>| Declaración Juramentada Inconsistente: </span>
+                            <input type="checkbox" name="declaracion">
+                            <span>| Planos Inconsistente: </span>
+                            <input type="checkbox" name="planos">
+                            <br>
+                            <br>
+                            <input type="number" step="0.01" id="costo" name="costo"
+                                   value="{{ documento.costo|stringformat:"0.2f" }}" placeholder="Ingrese el Costo"
+                                   class="form-control">
+                            <br>
+                            <input type="date" name="caducidad" value="{% if documento.fecha_caducidad %}{{ documento.fecha_caducidad|date:"Y-m-d" }}{% else %}{{ fecha|date:"Y-m-d" }}{% endif %}"
+                                   placeholder="Fecha de caducidad" class="form-control">
+                            <br>
+                            <button class="btn btn-primary">Ingresar Notas</button>
+                        </form>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 py-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    {% if documento.cedula %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">Cédula</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.cedula }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.votacion %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">C. votación</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.votacion }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.no_adeudar %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">NO DEUDA M</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.no_adeudar }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.no_adeudar_e %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">NO DEUDA EPAAGUA</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.cedula }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.senescyt %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">Senescyt</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.senescyt }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.titulo %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">Título</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.titulo }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.ruc %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">RUC</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.ruc }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.disenio %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">DISEÑO</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.disenio }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.declaracion_juramentada %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">DECLARACIÓN</h4>
+                                            <span><a target="_blank"
+                                                     href="/media/{{ documento.declaracion_juramentada }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.planos %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">PLANOS</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.planos }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if documento.escritura %}
+                        <div class="col-xl-3 col-sm-6">
+                            <div class="card mb-4 bg-purple">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-center ">
+                                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                            <i class="ti-credit-card"></i>
+                                        </div>
+                                        <div class="media-body text-light">
+                                            <h4 class="text-uppercase mb-0 weight500">ESCRITURA</h4>
+                                            <span><a target="_blank" href="/media/{{ documento.escritura }}"
+                                                     class="text-white">Cargado</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card mb-4 bg-danger">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-white sr-icon-box text-danger">
+                                        <i class="vl_shopping-bag2"></i>
+                                    </div>
+                                    <div class="media-body text-white">
+                                        <h4 class="text-uppercase mb-0 weight500">
+                                            <a class="text-white"
+                                               href="/funcionario/resolve?id={{ documento.id }}&generar">generar
+                                                Certificado</a>
+                                        </h4>
+                                        <span>
+                                            {% if documento.senescyt %}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&registromunicipal"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                            {% if documento.declaracion_juramentada and documento.planos %}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&prediorural"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                            {% if documento.tramite.nombre == 'Permiso de Construcción Menor' %}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&construccionmenor"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                            {% if documento.tramite.nombre == 'Registro de Letrero' %}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&letrero"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                            {% if documento.tramite.nombre == 'Permiso de Construcción en el Cementerio' %}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&construccioncementerio"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                            {% if documento.tramite.nombre == 'Certificado de Línea de Fábrica'%}
+                                                <a target="_blank"
+                                                   href="{% url 'certificado' %}?id={{ documento.id }}&lineafabrica"
+                                                   class="text-white">Ver Documento</a>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" id="d_pago" role="dialog"
+         aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Datos del Comprobante de pago</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/funcionario/resolve?id={{ documento.id }}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ documento.id }}">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">No. del Comprobante:</label>
+                            <div class="col-sm-9">
+                                <input type="text" value="{{ documento.n_comprobante }}" required class="form-control"name="comprobante" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de Pago:</label>
+                            <div class="col-sm-9">
+                                <input type="date" value="{{ documento.fecha_pago|date:"Y-m-d" }}" required class="form-control"name="f_pago" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">No. del Certificado:</label>
+                            <div class="col-sm-9">
+                                <input type="text" value="{{ documento.n_certificado }}" required class="form-control"name="n_certificado" placeholder="">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de Retiro:</label>
+                            <div class="col-sm-9">
+                                <input type="date" value="{{ documento.f_retiro|date:"Y-m-d" }}" required class="form-control"name="f_retiro" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">Nombre de la persona que retira:</label>
+                            <div class="col-sm-9">
+                                <input type="text" value="{{ documento.nombre_retira }}" required class="form-control"name="persona_retiro" placeholder="">
+                            </div>
+                        </div>
+                        <hr>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" id="imagenes" role="dialog"
+         aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Datos del Comprobante de pago</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/funcionario/resolve?id={{ documento.id }}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ documento.id }}">
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="file" class="form-control" name="grafico" placeholder="Seleccione archivo">
+                                <br>
+                                <img src="/media/{{ documento.grafico }}" alt="" style="width: 100%;">
+                            </div>
+                            <div class="col-6">
+                                <input type="file" class="form-control" name="puntos" placeholder="Seleccione archivo">
+                                <br>
+                                <img src="/media/{{ documento.puntos }}" style="width: 100%" alt="">
+                            </div>
+                        </div>
+                        <hr>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" id="predios" role="dialog"
+         aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Datos del predio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/funcionario/resolve?id={{ documento.id }}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ documento.id }}">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Área en (m<sup>2</sup>)</th>
+                                <td><input type="number" class="form-control" value="{{ documento.area }}"
+                                           required name="area"></td>
+                                <th>Código Nacional</th>
+                                <td><input type="text" class="form-control" value="{{ documento.codigo_nacional }}"
+                                          required name="nacional"></td>
+                                <th>Código Local</th>
+                                <td><input type="text" class="form-control" value="{{ documento.codigo_local }}"
+                                           required name="local"></td>
+                            </tr>
+                            <tr>
+                                <th>Sector</th>
+                                <td><input type="text" value="{{ documento.sector }}" class="form-control"
+                                                       required  name="sector">
+                                </td>
+                                <th>Parroquia</th>
+                                <td><input type="text" value="{{ documento.parroquia }}"
+                                                       class="form-control" required
+                                                      name="parroquia"></td>
+                                <th>Sitio</th>
+                                <td><input type="text" value="{{ documento.sitio }}" class="form-control"
+                                                       required  name="sitio">
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <th>Calle</th>
+                                <td colspan="5"><input type="text" value="{{ documento.calles }}" class="form-control"
+                                                       required  name="calles">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="text-align: center"><strong>LÍNDEROS</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Norte</th>
+                                <td colspan="5"><input type="text" value="{{ documento.norte }}" class="form-control"
+                                                       required  name="norte">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Sur</th>
+                                <td colspan="5"><input type="text" value="{{ documento.sur }}" class="form-control"
+                                                       required  name="sur"></td>
+                            </tr>
+                            <tr>
+                                <th>Este</th>
+                                <td colspan="5"><input type="text" value="{{ documento.este }}" class="form-control"
+                                                       required  name="este"></td>
+                            </tr>
+                            <tr>
+                                <th>Oeste</th>
+                                <td colspan="5"><input type="text" value="{{ documento.oeste }}" class="form-control"
+                                                       required  name="oeste">
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" id="observaciones" role="dialog"
+         aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myLargeModalLabel">Datos del predio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/funcionario/resolve?id={{ documento.id }}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ documento.id }}">
+                        <textarea name="datos" class="notas" id="datos">
+                            {% if documento.datos_observaciones %}
+                            {{ documento.datos_observaciones|safe }}
+                            {% else %}
+                            <p><b>LOS TRABAJOS A REALIZARSE COMPRENDEN:</b></p>
+                            <table class="table table-bordered"><tbody><tr><td><b>CERRAMIENTO FRONTAL:<br></b></td><td style="text-align: center;width: 50px">NO</td><td><b>CERRAMIENTO PERIFERICO:&nbsp;<br></b></td><td style="text-align: center;width: 50px">NO</td></tr><tr><td><b>CONSTRUCCION INTERIOR:<br></b></td><td style="text-align: center;">NO</td><td><b>&nbsp;NO CONSTRUCCION POSTERIOR:&nbsp;<br></b></td><td style="text-align: center;">NO</td></tr><tr><td><b>CONSTRUCCION LATERAL:&nbsp;<br></b></td><td style="text-align: center;">NO</td><td><b>CAMBIO DE CUBIERTA:&nbsp;<br></b></td><td style="text-align: center;">NO</td></tr><tr><td colspan='3'><b>APERTURA DE PUERTAS O VENTANAS:</b><br></td><td style="text-align: center;">NO</td></tr><tr><td><b>CUARTOS:&nbsp;<br></b></td><td style="text-align: center;">NO</td><td><b>LIMPIEZA DE TERRENO:&nbsp;<br></b></td><td style="text-align: center;">NO</td></tr><tr><td><b>CONSTRUCCION TOTAL:&nbsp;</b><br></td><td style="text-align: center;">NO</td><td><b>NO BAÑOS:</b><br></td><td style="text-align: center;">NO</td></tr></tbody></table><br>
+                            <p style="font-size:10px">SE CONSIDERA CONSTRUCCION MENOR A LA CONSTRUCCION, AMPLIACION O REPARACION DE EDIFICACIONES, QUE NO
+SOBREPASEN LOS 50,00 M2, SIN PLANOS -- CERRAMIENTOS FRONTALES Y PERIFERICOS.</p>
+                            {% endif %}
+                            </textarea>
+                        <br>
+                        <input type="number" step="0.01" value="{{ documento.area|stringformat:"0.2f"  }}"  class="form-control" name="area" placeholder="Ingrese el área">
+                        <br>
+                        <input type="number"  step="0.01" value="{{ documento.valor_avaluo|stringformat:"0.2f"  }}" class="form-control" name="valor" placeholder="Valor del avalúo">
+                        <br>
+                        <hr>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block styles %}
+<link href="{% static 'assets/vendor/summernote/summernote-bs4.css' %}" rel="stylesheet">
+<link href="{% static 'summernote-ext-table-master/summernote-ext-table-master/script/summernote/plugin/table/summernote-ext-table.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'assets/vendor/popper.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery.dcjqaccordion.2.7.js' %}"></script>
+    <script src="{% static 'assets/vendor/icheck/skins/icheck.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery.nicescroll.min.js' %}"></script>
+    <!--summernote-->
+    <script src="{% static 'assets/vendor/summernote/summernote-bs4.min.js' %}"></script>
+    <script src="{% static 'summernote-es-ES.min.js' %}"></script>
+    <script src="{% static 'summernote-ext-table-master/summernote-ext-table-master/script/summernote/plugin/table/summernote-ext-table.js' %}"></script>
+    <script>
+    $('.notas').summernote({
+        //airMode: true,
+
+        lan:'es-ES',
+        height: 300,
+        toolbar:[
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['style', ['style']],
+            ['para', ['ul', 'ol', 'paragraph', 'clear']],
+            ['insert', ['link', 'picture',]],
+            ['view', ['codeview']],
+            ['table', ['table'], ['merge', ['jMerge']],],
+        ],
+    });
+    $('.notas2').summernote({
+        //airMode: true,
+        lan:'es-ES',
+        height: 300,
+        toolbar:[
+            ['insert', ['picture',]],
+        ],
+
+    });
+    </script>
+    <script>
+    {% if messages %}
+        {% for message in messages %}
+            notificacion('{{ message }}', 'info')
+        {% endfor %}
+    {% endif %}
+    </script>
+
+{% endblock %}

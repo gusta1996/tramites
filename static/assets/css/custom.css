@@ -1,0 +1,17 @@
+.text-red-dark{
+    color: #5b0707 !important;
+}
+
+.btn-red-dark{
+    background-color: #5b0707 !important;
+    color: white;
+}
+
+.btn-red-dark:hover{
+    background-color: #f60202 !important;
+    color: white;
+}
+
+a.text-red-dark{
+    text-decoration: none !important;
+}

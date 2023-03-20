@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ registro.tramite.nombre }}</title>
+    <style>
+        tr {
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <table>
+        <tr>
+            <td style="text-align: center"><img style="width: 50px" src="/media/Escudo_de_El_Guabo.png" alt=""></td>
+            <td style="text-align: center"><img style="width: 120px" src="/media/ElGuabo.png" alt=""></td>
+            <td style="text-align: center"><img style="width: 120px" src="/media/ElGuabo.png" alt=""></td>
+        </tr>
+    </table>
+    <br><br>
+
+    <table>
+        <tr>
+            <td colspan="4" style="text-align: center; font-weight: bold; font-size: 12px;border: 1px solid black">
+                DIRECCIÓN DE OBRAS PÚBLICAS
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: center; font-weight: bold;border: 1px solid black">
+                FORMULARIO DE REGISTRO DE PROFESIONALES
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; border-left: 1px solid black; font-weight: bold;" colspan="2">
+                VALOR: $ 2.00
+            </td>
+            <td style="text-align: right; border-right: 1px solid black; font-weight: bold;" colspan="2">
+                FORMULARIO NO.: {{ registro.id|stringformat:"010d" }}
+            </td>
+        </tr>
+        <tr style="border: 1px solid black">
+            <td colspan="4" style="text-align: center; font-weight: bold;">
+                DATOS PERSONALES
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>REGISTRO MUNICIPAL NO.</strong></td>
+            <td>{{ registro.numero|stringformat:"08d" }}</td>
+            <td colspan="2" style="border-right: 1px solid black"></td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>CÉDULA</strong></td>
+            <td>{{ registro.usuario.username }}</td>
+            <td colspan="2" style="border-right: 1px solid black"></td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>NOMBRES</strong></td>
+            <td>{{ registro.usuario.first_name }}</td>
+            <td><strong>PROFESIÓN</strong></td>
+            <td style="border-right: 1px solid black">{{ registro.profesion }}</td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>APELLIDOS</strong></td>
+            <td>{{ registro.usuario.last_name }}</td>
+            <td><strong>REGISTRO PROFESIONAL</strong></td>
+            <td style="border-right: 1px solid black">{{ registro.registro_profesional }}</td>
+        </tr>
+
+        <tr>
+            <td style="border-left: 1px solid black"><strong>NACIONALIDAD</strong></td>
+            <td>{{ registro.usuario.perfil_set.all.first.nacionalidad }}</td>
+            <td colspan="2" style="border-right: 1px solid black"></td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>EMPRESA DONDE LABORA</strong></td>
+            <td colspan="3"
+                style="border-right: 1px solid black">{{ registro.usuario.perfil_set.all.first.empresa }}</td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>DIRECCIÓN</strong></td>
+            <td colspan="3"
+                style="border-right: 1px solid black">{{ registro.usuario.perfil_set.all.first.direccion }}</td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black"><strong>CORREO ELECTRÓNICO</strong></td>
+            <td colspan="3" style="border-right: 1px solid black">
+                {% if registro.usuario.email %}{{ registro.usuario.email }}{% else %}No registrado{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="border-left: 1px solid black; border-bottom: 1px solid black"><strong>TELÉFONO</strong></td>
+            <td colspan="3"
+                style="border-bottom: 1px solid black; border-right: 1px solid black">{{ registro.usuario.perfil_set.all.first.telefono }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: center; border: 1px solid black" colspan="2"><strong>FOTO</strong></td>
+            <td style="text-align: center; border: 1px solid black" colspan="2"><strong>FIRMA DEL PROFESIONAL</strong>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; border: 1px solid black" colspan="2">
+
+            </td>
+            <td style="text-align: center; border: 1px solid black; text-align: center" colspan="2">
+                <br><br><br><br><br><br>
+                ________________________________ <br>
+                FIRMA
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="padding: 2px; border: 1px solid black">
+                <p style="text-align: justify">
+                    Conforme a lo dispuesto en la <strong>"Ordenanza para el cobro de tasas y servicios técnicos y
+                    administrativos, que el Gobierno Municipal de cantón EL GUABO prestaré a los usuarios"</strong> Art.
+                    5
+                    literal 15 <strong>"Inscripción de registro de profesionales de la
+                    Arquitectura e Ingeniería en el Gobierno Municipal del cantón EL GUABO, se cobrará una tasa del
+                    treinta por ciento (30%) de la Remuneración
+                    básica Unificada del trabajador en general."</strong>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="padding: 2px;">
+                <p style="text-align: right">
+                    <strong>TASA A PAGAR </strong>($): {{ registro.costo }}
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="padding: 2px;text-align: center; border: 1px solid black">
+                <br><br><br><br><br><br>
+                ______________________________ <br>
+                DIRECTOR DE OBRAS PÚBLICAS
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="padding: 2px;text-align: right;">
+                <p><strong>Fecha: {{ registro.fecha }}</strong></p>
+            </td>
+        </tr>
+    </table>
+    <p style="text-align: center">Gobierno Autónomo Descentralizado Municipal del Cantón El Guabo - Telf: 593 7 3701180 - www.elguabo.gob.ec -
+        Dirección: Sucre y 3 de Noviembre - El Guabo - El Oro - Ecuador
+    </p>
+    <br><br><br><br>
+    <p>Fecha de Impresión: {{ fecha }}</p>
+</div>
+</body>
+</html>

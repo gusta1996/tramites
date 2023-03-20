@@ -1,0 +1,40 @@
+{% extends 'login.html' %}
+{% block form %}
+    <form action="{% url 'crear_usuario' %}" class="needs-validation was-validated" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="number" required class="form-control" name="username" id="username"
+                   placeholder="Ingrese su número de Cédula">
+        </div>
+        <div class="form-group">
+            <input type="password" required class="form-control" name="password1" id="password1"
+                   placeholder="Contraseña">
+        </div>
+        <div class="form-group">
+            <input type="password" required class="form-control" name="password2" id="password2"
+                   placeholder="Confirmar Contraseña">
+        </div>
+        <button type="submit" class="btn btn-facebook btn-red-dark btn-pill text-uppercase" style="width: 100%">
+            Registrarse
+        </button>
+        <div class="form-divider"></div>
+        <a href="{% url 'login' %}" class="btn btn-facebook btn-red-dark btn-pill text-uppercase"><i
+                class="fa fa-users"></i> Iniciar Sesión</a>
+    </form>
+
+{% endblock %}
+{% block script %}
+<script>
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    icon: '{{ message.tags }}',
+                    title: 'Mensaje',
+                    text: '{{ message }}',
+                    footer: '<a href="{% url 'login' %}"> <i class="fa fa-users"> Iniciar Sesión</a>'
+                })
+            {% endfor %}
+        {% endif %}
+
+    </script>
+{% endblock %}

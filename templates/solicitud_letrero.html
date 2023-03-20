@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitud de Letrero</title>
+    <style>
+        p,h2{
+            font-size: 14px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding-right: 50px;
+            padding-left: 50px;
+            line-height: 40px;
+        }
+        span{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+    </style>
+</head>
+<body>
+<h2 style="text-align: center">SOLICITUD DE LETRERO NO.: {{ registro.id }}</h2>
+<p style="text-align: right">El Guabo, {{ registro.fecha }}</p>
+<p>
+    Lcdo. Hitler Álvarez Bejarano <br>
+    <strong>ALCALDE DEL CANTÓN EL GUABO</strong><br>
+    <strong>Ciudad.-</strong>
+    <br><br>
+    En su despacho
+</p>
+<p style="text-align: justify">
+    Yo, <strong>{{ registro.usuario.get_full_name }}</strong> con C.C. No. {{ registro.usuario.username }},
+    me dirijo a usted para solicitarle se sirva ordenar a quien corresponda se me realize la inspección de
+    <strong>1 LETRERO PUBLICITARIO</strong>, con las dimensiones: {{ registro.x }} cm. de ancho y {{ registro.y }} cm. de alto, en el
+    negocio que lleva por nombre <strong>{{ registro.nombre_negocio|upper }}</strong>, el mismo que se encuentra ubicado en
+    <strong>{{ registro.direccion_local|upper }}</strong>, del Cantón El Guabo.
+</p>
+<p style="text-align: justify">
+    Por la atención que se sirva dar a la presente solicitud, Muchas gracias.
+</p>
+<p style="text-align: center; line-height: 20px; padding-top: 50px">
+
+    {{ registro.usuario.get_full_name }}<br>
+    <strong>C.C.: </strong>{{ registro.usuario.username }}<br>
+    <strong>Teléfono: </strong> {{ perfil.telefono }}
+</p>
+<p style="text-align: justify; line-height: 20px; padding-top: 50px; font-size: 10px">
+    <strong>Nota:</strong> Esta solicitud, se firmo electrónicamente por el sistema
+    informático por lo tanto tiene válidez para el trámite al cual se desea aplicar,
+    motivo por el cual el usuario que realizó la solicitud es el único responsable.</p>
+<p style="text-align: justify; line-height: 20px; padding-top: 50px; font-size: 10px">
+    <strong>Nota declaratoria:</strong>Declaro que he sido yo, {{ registro.usuario.get_full_name }}
+    con Cédula de Identidad No. {{ registro.usuario.username }}, quien realizó la solicitud.</p>
+<p style="text-align: justify; line-height: 20px; padding-top: 50px; font-size: 10px">
+    <strong>Para verificación:</strong> registro_letrero?solicitud={{ registro.id }}</p>
+</body>
+</html>

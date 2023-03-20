@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Permiso de contrucción menor</title>
+    <style>
+        #titulo{
+            border: 1px solid black;
+            font-weight: bold;
+            background-color: lightgrey;
+            text-align: center;
+            padding: 3px;
+        }
+        #subtitulo{
+            border: 1px solid black;
+            font-weight: bold;
+            padding: 3px;
+        }
+        #subtitulo_centro{
+            border: 1px solid black;
+            font-weight: bold;
+            text-align: center;
+            padding: 3px;
+        }
+        #imagen{
+            padding: 5px;
+            text-align: center;
+        }
+        #parr{
+            padding: 3px;
+            border: 1px solid black;
+        }
+        .table-bordered>tbody>tr>td{
+            border: 1px solid lightgrey;
+            font-size: 7px;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <td id="imagen"><img style="width: 60px" src="/media/Escudo_de_El_Guabo.png" alt=""></td>
+        <td id="imagen"><img style="width: 150px" src="/media/ElGuabo.png" alt=""></td>
+        <td id="imagen"><img style="width: 150px" src="/media/ElGuabo.png" alt=""></td>
+    </tr>
+    <tr>
+        <td colspan="3" id="titulo">DIRECCIÓN DE OBRAS PUBLICAS</td>
+    </tr>
+    <tr>
+        <td colspan="3" id="subtitulo_centro">FORMULARIO DE CONTRUCCIÓN MENOR</td>
+    </tr>
+    <tr>
+        <td id="subtitulo">No. de formulario</td><td id="parr" colspan="2"> {{ registro.id|stringformat:"010d" }}</td>
+    </tr>
+    <tr>
+        <td id="subtitulo">Clave Catastral</td><td id="parr" colspan="2"> {{ registro.clave_catastral }}</td>
+    </tr>
+    <tr>
+        <td id="subtitulo">Interesado/Propietario</td><td id="parr" colspan="2"> {{ registro.usuario.get_full_name }}</td>
+    </tr>
+    <tr>
+        <td id="subtitulo">Cédula/ RUC</td><td id="parr" colspan="2"> {{ registro.usuario.username }}</td>
+    </tr>
+    <tr>
+        <td id="subtitulo">Ubicación</td><td id="parr" colspan="2"> {{ registro.direccion_local }}</td>
+    </tr>
+    <tr>
+        <td id="subtitulo" colspan="3">Detalle de la construcción o reparación</td>
+    </tr>
+    <tr>
+        <td id="parr" colspan="3">{{ registro.notas|safe }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: center" colspan="3">
+            <br><br><br><br>
+            ____________________________________
+            <br>FIRMA DEL SOLICITANTE
+        </td>
+    </tr>
+    <tr><td colspan="3" style="padding-top: 5px">
+        Presentada en la direccion de obras públicas el {{ registro.fecha }}
+    </td></tr>
+</table>
+<table>
+    <tr>
+        <td id="titulo">CROQUIS DE LA UBICACIÓN</td>
+        <td id="titulo">DATOS Y OBSERVACIONES</td>
+    </tr>
+    <tr>
+        <td style="width: 40%" id="parr"><img src="/media/{{ registro.grafico }}" alt=""></td>
+        <td style="width: 60%" id="parr">{{ registro.datos_observaciones|safe }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" id="parr">
+            <strong>Observaciones:</strong>PERMISO DE CERRAMIENTO
+        </td>
+    </tr>
+    <tr>
+        <td id="parr"><strong>TASA A PAGAR:</strong> ${{ registro.costo }}</td>
+        <td id="parr"><strong>AREA CONSTRUCCIÓN m<sup>2</sup>:</strong> {{ registro.area }}</td>
+    </tr>
+    <tr>
+        <td id="parr"><strong>AVALÚO POR m<sup>2</sup>:</strong> ${{ registro.valor_avaluo }}</td>
+        <td id="parr"> </td>
+    </tr>
+    <tr>
+        <td id="parr" colspan="2" style="text-align: center">
+            <br><br><br>
+            _______________________________________ <br>
+            DIRECTOR DE OBRAS PÚBBLICAS
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-top: 10px">
+            <strong>Fecha de Impresión:</strong> {{ fecha }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-top: 10px; font-size: 7px; text-align: center" colspan="2">
+            Gobierno Autónomo Descentralizado Municipal del Cantón El Guabo - Telf: 593 7 3701180 - www.elguabo.gob.ec - Dirección: Sucre y 3 de Noviembre - El Guabo - El Oro - Ecuador
+        </td>
+    </tr>
+</table>
+</body>
+</html>

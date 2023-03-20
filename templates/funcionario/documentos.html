@@ -1,0 +1,63 @@
+{% extends 'funcionario/profile.html' %}
+{% load static %}
+{% block main %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="tabla" class="table table-striped table-bordered">
+                    <thead>
+                    <th style="text-align: center">Id</th>
+                    <th style="text-align: center">Fecha</th>
+                    <th>Solicitante</th>
+                    <th>Nombre del Trámite</th>
+                    <th style="text-align: center">Estado</th>
+                    <th>Documentos Habilitantes</th>
+                    </thead>
+                    <tbody>
+                    {% for documento in documentos %}
+                        <tr>
+                            <td style="text-align: center">{{ documento.id }}</td>
+                            <td style="text-align: center">{{ documento.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ documento.usuario.get_full_name }}</td>
+                            <td><a href="/funcionario/resolve?id={{ documento.id }}">{{ documento.tramite.nombre }}</a></td>
+                            <td style="text-align: center">{% if documento.finalizado %}
+                                <span class="text-danger">Finalizado</span>
+                            {% else %}
+                                {% if documento.estado %}
+                                    <i class=" text-success fa fa-check"></i>
+                                {% else %}
+                                    <i class=" text-danger fa fa-close"></i>
+                                {% endif %}
+                            {% endif %}</td>
+                            <td>
+                                <ul>
+                                    {% for doc in  documento.tramite.requisitos_set.all %}
+                                        <li>{{ doc }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block styles %}
+    <link href="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/jstree/themes/default/style.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'assets/vendor/toastr-master/toastr.js' %}"></script>
+    <script src="{% static 'app/Notificaciones.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script>
+    $("#tabla").DataTable({
+        "order": [[ 0, "desc" ]]
+    })
+    </script>
+{% endblock %}
