@@ -1,0 +1,206 @@
+{% extends 'profile.html' %}
+{% load static %}
+{% block contenido %}
+    <div class="pt-3 pb-4">
+        <div class="col-sm-12 mb-4">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input value="{{ tramite.id }}" name="clase" id="clase" hidden>
+                <button type="submit" class="btn btn-blue-dark" style="width: 100%">Iniciar Trámite</button>
+            </form>
+        </div>
+        <div class="col-sm-12">
+            <div class="alert alert-primary" role="alert">
+                <strong>{{ tramite.nombre}}: </strong>{{ tramite.detalle }} A continuación los requisitos:
+            </div>
+            <div class="card card-shadow mb-4">
+                <div class="card-body">
+                    <div id="jstree">
+                        <ul>
+                            <li class="jstree-open" data-jstree='{"icon":"fa fa-folder-open-o text-danger"}'>
+                                {{ tramite.nombre}}
+                                <ul>
+                                    {% for requisito in requisitos %}
+                                        <li data-jstree='{"icon":"fa fa-file-o text-primary"}'>{{ requisito.requisito }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="t-tramites" class="display table table-bordered table-striped" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Usado</th>
+                    <th style="text-align: center">Opciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for registro in registros %}
+                    <tr>
+                        <td>{{ registro.id }}</td>
+                        <td>{{ registro.tramite }}</td>
+                        <td>{% if registro.estado %}En Revisión{% else %}En Proceso{% endif %}</td>
+                        <td>{% if registro.es_usado %}Si{% else %}No{% endif %}</td>
+                        <td style="text-align: center">
+                            <a style="cursor: pointer"
+                               title="Cargar Documentos habilitantes"
+                               data-id="{{ registro.id }}"
+                               data-toggle="modal" data-target="#modalRegistroMunicipal"
+                               class="btn btn-outline-warning data">
+                                <i style="font-size: medium" class="ti-export"></i>
+                            </a>
+                            {% if not registro.finalizado %}
+                                <a href="/plusvalia?remove={{ registro.id }}"
+                                   title="Eliminar trámite"
+                                   class="btn btn-outline-danger">
+                                    <i style="font-size: medium" class="ti-trash"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block contenido1 %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalRegistroMunicipal" tabindex="-1" role="dialog"
+         aria-labelledby="modalRegistroMunicipal"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Documentos habilitantes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="documentos" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <table class="table table-active">
+                            <tr>
+                                <td><i class="" id="ck1"></i></td>
+                                <td>Certificado de No adeudar al Municipio</td>
+                                <td>
+                                    <input type="file" id="no_adeudar" name="no_adeudar">
+                                    <a target="_blank" id="ad1">Ver Documento</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" id="btnno_adeudar"><i class="fa fa-save"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="" id="ck2"></i></td>
+                                <td>Certificado de No adeudar a EPAAGUA</td>
+                                <td>
+                                    <input type="file" id="no_adeudar_e" name="no_adeudar_e">
+                                    <a target="_blank" id="ad2">Ver Documento</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" id="btnno_adeudar_e"><i class="fa fa-save"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="" id="ck3"></i></td>
+                                <td>Copia de la escritura</td>
+                                <td>
+                                    <input type="file" id="escritura" name="escritura">
+                                    <a target="_blank" id="ad3">Ver Documento</a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" id="btnescritura"><i class="fa fa-save"></i></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="enviar" class="btn btn-primary">Finalizar Proceso</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block styles %}
+    <link href="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/jstree/themes/default/style.css' %}" rel="stylesheet">
+{% endblock %}
+{% block script %}
+    <script src="{% static 'app/api.js' %}"></script>
+    <script src="{% static 'app/limpiarCombos.js' %}"></script>
+    <script src="{% static 'app/comboData.js' %}"></script>
+    <script src="{% static 'assets/vendor/toastr-master/toastr.js' %}"></script>
+    <script src="{% static 'app/Notificaciones.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jstree/jstree.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/js-init/init-jstree.js' %}"></script>
+    <script src="{% static 'app/plusvalia.js' %}"></script>
+    <script>
+        let id = 0;
+        $(document).ready(function () {
+            let apitipo = `${endPoint}return_tramites`;
+            let tipo = document.getElementById('tipo');
+            const parametros = window.location.search;
+            const urlParams = new URLSearchParams(parametros);
+            if (urlParams.has('id')) {
+                let params = urlParams.values();
+                for (const value of params) (id = value);
+                $("#modalRegistroMunicipal").modal('show');
+                registromunicipal(id)
+            }
+
+            llenarCombo(apitipo, tipo)
+        })
+        $('#t-tramites').DataTable()
+
+        $('.data').click(function () {
+
+            id = $(this).data('id')
+            $("#documentos").attr('action', `/plusvalia?id=${id}`)
+            registromunicipal(id)
+        })
+
+        $('input[type="file"]').on('change', function () {
+            var ext = $(this).val().split('.').pop();
+            if ($(this).val() != '') {
+                if (ext == "pdf") {
+                    if ($(this)[0].files[0].size > 10485760) {
+                        console.log("El documento excede el tamaño máximo");
+                        notificacion('Error al cargar el archivo, es posible que el archivo sea muy pesado máximo 10 Mb','error')
+                        $(this).val('');
+                    }
+                } else {
+                    $(this).val('');
+                    notificacion('Solo se admiten archivos en formato pdf','error')
+                }
+            }
+        });
+        $("#enviar").click(function(){
+            let api = `${endPoint}plusvalia`;
+            $.post(api,{'enviar':'ok','id':id,'csrfmiddlewaretoken':$("input[name='csrfmiddlewaretoken']").val()},function (data){
+               notificacion('El proceso se ha finalizado correctamente..!','success')
+                setTimeout(function(){
+                    location.href=api
+                },2000)
+            })
+
+        })
+    </script>
+{% endblock %}

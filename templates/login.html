@@ -59,7 +59,7 @@
                 <h2 class="text-center mb-4">
                     <img src="{% static 'assets/img/logo.png' %}" srcset="{% static 'assets/img/logo@2x.png' %} 2x" alt="El Guabo">
                 </h2>
-                <h4 class="text-uppercase- text-red-dark text-center mb-5">Iniciar la aplicación</h4>
+                <h4 class="text-uppercase- text-blue-dark text-center mb-5">Iniciar la aplicación</h4>
                 {% block form %}
                 <form method="post" action="/login">
                     {% csrf_token %}
@@ -71,13 +71,13 @@
                     </div>
 
                     <div class="form-group clearfix">
-                        <a href="{% url 'olvido_contrasenia' %}" class="float-left text-red-dark forgot-link my-2">Olvide mi contraseña ?</a>
-                        <button type="submit" class="btn btn-red-dark btn-pill float-right">Iniciar Sesión</button>
+                        <a href="{% url 'olvido_contrasenia' %}" class="float-left text-blue-dark forgot-link my-2">Olvide mi contraseña ?</a>
+                        <button type="submit" class="btn btn-blue-dark btn-pill float-right">Iniciar Sesión</button>
                     </div>
 
                     <div class="form-divider"></div>
                     <div class="text-center mt-5">
-                        <a href="{% url 'crear_usuario' %}"  class="btn-link text-capitalize f12 text-red-dark">Crear Cuenta</a>
+                        <a href="{% url 'crear_usuario' %}"  class="btn-link text-capitalize f12 text-blue-dark">Crear Cuenta</a>
                     </div>
                 </form>
                 {% endblock %}

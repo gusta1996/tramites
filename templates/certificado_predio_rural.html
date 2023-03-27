@@ -2,6 +2,13 @@
 {% load static %}
 {% block contenido %}
     <div class="pt-3 pb-4">
+        <div class="col-sm-12 mb-4">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input value="{{ tramite.id }}" name="clase" id="clase" hidden>
+                <button type="submit" class="btn btn-blue-dark" style="width: 100%">Iniciar Trámite</button>
+            </form>
+        </div>
         <div class=" col-sm-12">
             <div class="alert alert-primary" role="alert">
                 <strong>{{ tramite.nombre }}: </strong>{{ tramite.detalle }} A continuación los requisitos:
@@ -66,24 +73,6 @@
     </div>
 {% endblock %}
 {% block contenido1 %}
-    <div class="card card-shadow mb-4">
-        <div class="card-header border-0">
-            <form action="" method="post">
-                {% csrf_token %}
-                <div class="input-group mb-4" style="padding-top: 20px">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1"><i class="ti-hand-point-down"></i></span>
-                    </div>
-                    <select name="tipo" required="" disabled class="form-control" id="tipo">
-
-                    </select>
-                    <input name="clase" id="clase" hidden>
-                </div>
-                <button type="submit" class="btn btn-red-dark" style="width: 100%">Iniciar Trámite</button>
-            </form>
-        </div>
-    </div>
-
     <!-- Modal -->
     <div class="modal fade" id="modalRegistroMunicipal" tabindex="-1" role="dialog"
          aria-labelledby="modalRegistroMunicipal"

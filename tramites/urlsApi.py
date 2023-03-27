@@ -30,7 +30,22 @@ urlpatterns = [
     path('rev_patente_municipal', rev_patente_municipal, name='rev_patente_municipal'),
     path('permiso_via_publica', permiso_via_publica, name='permiso_via_publica'),
 
-
+    path('alcabalas', alcabalas, name='alcabalas'),
+    path('apertura_usuarios', apertura_usuarios, name='apertura_usuarios'),
+    path('cierre_patentes', cierre_patentes, name='cierre_patentes'),
+    path('convenios_pago', convenios_pago, name='convenios_pago'),
+    path('exoneracion_tercera_edad', exoneracion_tercera_edad, name='exoneracion_tercera_edad'),
+    path('ingreso_cert_riesgo', ingreso_cert_riesgo, name='ingreso_cert_riesgo'),
+    path('ingreso_der_sepultura', ingreso_der_sepultura, name='ingreso_der_sepultura'),
+    path('mensualidad_arr_feria_libre', mensualidad_arr_feria_libre, name='mensualidad_arr_feria_libre'),
+    path('ingreso_ocupacion_via_pub', ingreso_ocupacion_via_pub, name='ingreso_ocupacion_via_pub'),
+    path('ingreso_energia_centro_com', ingreso_energia_centro_com, name='ingreso_energia_centro_com'),
+    path('mensualidad_solares', mensualidad_solares, name='mensualidad_solares'),
+    path('patentes', patentes, name='patentes'),
+    path('plusvalia', plusvalia, name='plusvalia'),
+    path('revision_vehicular', revision_vehicular, name='revision_vehicular'),
+    path('rodaje', rodaje, name='rodaje'),
+    path('notas_creditos', notas_creditos, name='notas_creditos'),
 
     path('return_registro_municipal', return_registro_municipal, name='return_registro_municipal'),
 

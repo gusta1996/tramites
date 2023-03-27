@@ -923,7 +923,7 @@ def registro_municipal(request):
 
 # COMISARIA MUNICIPAL
 def derechos_sepultura(request):
-    tramite=Tramites.objects.get(nombre__icontains='Derechos De Sepultura')
+    tramite=Tramites.objects.get(id=23)
     registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
     reg = None
     if 'remove' in request.GET:
@@ -1033,7 +1033,7 @@ def exhumacion_cadaveres(request):
     return render(request,'exhumacion_cadaveres.html',contexto)
 
 def patente_municipal(request):
-    tramite=Tramites.objects.get(nombre__icontains='Patente Municipal')
+    tramite=Tramites.objects.get(id=25)
     registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
     reg = None
     if 'remove' in request.GET:
@@ -1255,6 +1255,1125 @@ def permiso_via_publica(request):
 
 # RENTAS
 
+def alcabalas(request):
+    tramite=Tramites.objects.get(nombre__icontains='Alcabalas')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('alcabalas')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/alcabalas?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/alcabalas')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'alcabalas.html',contexto)
+
+def apertura_usuarios(request):
+    tramite=Tramites.objects.get(nombre__icontains='Aperturas de usuario')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('apertura_usuarios')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/apertura_usuarios?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/apertura_usuarios')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'apertura_usuarios.html',contexto)
+
+def cierre_patentes(request):
+    tramite=Tramites.objects.get(nombre__icontains='Cierre de patentes')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('cierre_patentes')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/cierre_patentes?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/cierre_patentes')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'cierre_patentes.html',contexto)
+
+def convenios_pago(request):
+    tramite=Tramites.objects.get(nombre__icontains='Convenios De Pago')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('convenios_pago')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/convenios_pago?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/convenios_pago')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'convenios_pago.html',contexto)
+
+def exoneracion_tercera_edad(request):
+    tramite=Tramites.objects.get(nombre__icontains='Exoneración De Tercera Edad')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('exoneracion_tercera_edad')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/exoneracion_tercera_edad?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/exoneracion_tercera_edad')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'exoneracion_tercera_edad.html',contexto)
+
+def ingreso_cert_riesgo(request):
+    tramite=Tramites.objects.get(nombre__icontains='Ingreso De Certificados De Riesgo')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('ingreso_cert_riesgo')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/ingreso_cert_riesgo?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/ingreso_cert_riesgo')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'ingreso_cert_riesgo.html',contexto)
+
+def ingreso_der_sepultura(request):
+    tramite=Tramites.objects.get(nombre__icontains='Ingreso De Derechos De Sepultura')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('ingreso_der_sepultura')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/ingreso_der_sepultura?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/ingreso_der_sepultura')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'ingreso_der_sepultura.html',contexto)
+
+def mensualidad_arr_feria_libre(request):
+    tramite=Tramites.objects.get(nombre__icontains='Ingreso De Mensualidad De Arriendo De Local En La Feria Libre De La Cdla La Octubrina')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('mensualidad_arr_feria_libre')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/mensualidad_arr_feria_libre?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/mensualidad_arr_feria_libre')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'mensualidad_arr_feria_libre.html',contexto)
+
+def ingreso_ocupacion_via_pub(request):
+    tramite=Tramites.objects.get(nombre__icontains='Ingreso De Valor Por Ocupacion De Via Publica')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('ingreso_ocupacion_via_pub')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/ingreso_ocupacion_via_pub?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/ingreso_ocupacion_via_pub')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'ingreso_ocupacion_via_pub.html',contexto)
+
+def ingreso_energia_centro_com(request):
+    tramite=Tramites.objects.get(nombre__icontains='Ingresos De Energía Eléctrica Del Centro Comercial')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('ingreso_energia_centro_com')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/ingreso_energia_centro_com?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/ingreso_energia_centro_com')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'ingreso_energia_centro_com.html',contexto)
+
+def mensualidad_solares(request):
+    tramite=Tramites.objects.get(nombre__icontains='Mensualidades De Solares Municipales')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('mensualidad_solares')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/mensualidad_solares?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/mensualidad_solares')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'mensualidad_solares.html',contexto)
+
+def patentes(request):
+    tramite=Tramites.objects.get(id=40)
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('patentes')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/patentes?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/patentes')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'patentes.html',contexto)
+
+def plusvalia(request):
+    tramite=Tramites.objects.get(nombre__icontains='Plusvalía')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('plusvalia')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/plusvalia?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/plusvalia')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'plusvalia.html',contexto)
+
+def revision_vehicular(request):
+    tramite=Tramites.objects.get(nombre__icontains='Revisión Vehicular')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('revision_vehicular')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/revision_vehicular?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/revision_vehicular')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'revision_vehicular.html',contexto)
+
+def rodaje(request):
+    tramite=Tramites.objects.get(nombre__icontains='rodaje')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('rodaje')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/rodaje?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/rodaje')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'rodaje.html',contexto)
+
+def notas_creditos(request):
+    tramite=Tramites.objects.get(nombre__icontains='Notas De Créditos')
+    registros=RegistroMunicipal.objects.filter(usuario=request.user,tramite=tramite)
+    reg = None
+    if 'remove' in request.GET:
+        reg = registros.get(pk=request.GET.get('remove'))
+        reg.delete()
+        messages.add_message(request, messages.SUCCESS, "Registro Eliminado..!")
+        return HttpResponseRedirect('notas_creditos')
+    if request.POST:
+        if 'enviar' in request.POST:
+            reg = registros.filter(pk=request.POST.get('id')).last()
+            reg.estado=True
+            reg.save()
+            return HttpResponse('ok')
+        else:
+            if 'id' in request.GET:
+                reg = registros.filter(pk=request.GET.get('id')).last()
+                reg.formula='1'
+                print(request.POST)
+                cedula = Perfil.objects.get(user=request.user).cedula
+                if cedula:
+                    reg.cedula = cedula
+                try:
+                    reg.cedula = request.FILES['cedula']
+                except:
+                    print('no viene cedula')
+                try:
+                    reg.votacion = request.FILES['votacion']
+                except:
+                    print('no viene votacion')
+                try:
+                    reg.no_adeudar = request.FILES['no_adeudar']
+                except:
+                    print('no viene no_adeudar')
+                try:
+                    reg.senescyt = request.FILES['senescyt']
+                except:
+                    print('no viene senescyt')
+                try:
+                    reg.titulo = request.FILES['titulo']
+                except:
+                    print('no viene titulo')
+                reg.registro_profesional=request.POST.get('n_senescyt')
+                reg.profesion = request.POST.get('profesion')
+                try:
+                    reg.save()
+                    messages.add_message(request, messages.SUCCESS, "El documento se cargo exitosamente..!")
+                    return HttpResponseRedirect('/notas_creditos?id='+request.GET.get('id'))
+                except:
+                    return HttpResponseRedirect('/notas_creditos')
+            else:
+                reg = RegistroMunicipal()
+                reg.usuario=request.user
+                reg.tramite_id=request.POST.get('clase')
+                reg.formula="1"
+                reg.estado=False
+                reg.es_usado=False
+                reg.finalizado=False
+                reg.save()
+                messages.add_message(request, messages.SUCCESS, "El trámite se ha creado correctamente..!")
+    contexto={
+        'tramite':tramite,
+        'requisitos':Requisitos.objects.filter(tramite=tramite),
+        'registro':reg,
+        'registros':registros,
+        'perfil':Perfil.objects.get(user=request.user)
+    }
+    return render(request,'notas_creditos.html',contexto)
 
 # FIN - RENTAS
 
